@@ -1,4 +1,3 @@
-from calendar import c
 import bpy
 
 class RhinoBridgeProperties(bpy.types.PropertyGroup):
