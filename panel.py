@@ -11,10 +11,10 @@ class RhinoBridgePanel(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         scene = context.scene
-        props = scene.rhinobridge_props
-        layout.prop(props, 'port')
+        state = scene.rhinobridge
+        layout.prop(state, 'port')
 
         row = layout.row()
-        operator = row.operator("rhinobridge.socketmanager", text="Stop" if props.running else 'Start')
+        operator = row.operator("rhinobridge.socketmanager", text="Stop" if state.running else 'Start')
         if not ('operator' in globals()):
             globals()['operator'] = operator

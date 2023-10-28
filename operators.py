@@ -48,7 +48,7 @@ class RHINOBRIDGE_SocketStop(bpy.types.Operator):
     def execute(self, context):
 
         try:
-            host, port = 'localhost', context.scene.rhinobridge_props.port
+            host, port = 'localhost', context.scene.rhinobridge.port
             s = socket.socket()
             s.connect((host,port))
             data = "Bye RhinoBridge"
@@ -123,8 +123,8 @@ class Thread_Init(threading.Thread):
     def run(self):
         try:
             run_livelink = True
-            bpy.context.scene.rhinobridge_props.running = True
-            host, port = 'localhost', bpy.context.scene.rhinobridge_props.port
+            bpy.context.scene.rhinobridge.running = True
+            host, port = 'localhost', bpy.context.scene.rhinobridge.port
             #Making a socket object.
             socket_ = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             #Binding the socket to host and port number mentioned at the start.
@@ -141,7 +141,7 @@ class Thread_Init(threading.Thread):
                 data = client.recv(buffer_size)
                 if data == b'Bye RhinoBridge':
                     run_livelink = False
-                    bpy.context.scene.rhinobridge_props.running = False
+                    bpy.context.scene.rhinobridge.running = False
                     break
 
                 #If any data is received over the port.
@@ -154,7 +154,7 @@ class Thread_Init(threading.Thread):
                         data = client.recv(4096*2)
                         if data == b'Bye RhinoBridge':
                             run_livelink = False
-                            bpy.context.scene.rhinobridge_props.running = False
+                            bpy.context.scene.rhinobridge.running = False
                             break
                         #if we are getting data keep appending it to the Total data.
                         if data : self.TotalData += data
@@ -163,7 +163,7 @@ class Thread_Init(threading.Thread):
                             self.importer(self.TotalData)
                             break
         except Exception as e:
-            bpy.context.scene.rhinobridge_props.running = False
+            bpy.context.scene.rhinobridge.running = False
             print( "RhinoBridge Plugin Error initializing the thread. Error: ", str(e) )
 
 class thread_checker(threading.Thread):
@@ -200,14 +200,14 @@ class SocketManager(bpy.types.Operator):
 
 
     def execute(self, context):
-        if context.scene.rhinobridge_props.running:
+        if context.scene.rhinobridge.running:
             return self.stop_socket(context)
         else:
             return self.start_socket(context)
     
     def stop_socket(self, context):
         try:
-            host, port = 'localhost', context.scene.rhinobridge_props.port
+            host, port = 'localhost', context.scene.rhinobridge.port
             s = socket.socket()
             s.connect((host,port))
             data = "Bye RhinoBridge"
@@ -236,7 +236,7 @@ class SocketManager(bpy.types.Operator):
                 globals()['RhinoAutoImport_DataSet'] = None       
         except Exception as e:
             print( "RhinoBridge Plugin Error starting blender plugin (newDataMonitor). Error: ", str(e) )
-            bpy.context.scene.rhinobridge_props.running = False
+            bpy.context.scene.rhinobridge.running = False
             return {"FAILED"}
         return 1.0
 

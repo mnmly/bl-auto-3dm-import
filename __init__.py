@@ -53,7 +53,7 @@ CLASSES = [ SocketManager, RhinoBridgePanel, RhinoBridgeProperties]
 def register():
     for c in CLASSES:
         bpy.utils.register_class(c)
-    bpy.types.Scene.rhinobridge_props = bpy.props.PointerProperty(type=RhinoBridgeProperties)
+    bpy.types.Scene.rhinobridge = bpy.props.PointerProperty(type=RhinoBridgeProperties)
     bpy.app.handlers.load_post.append(load_plugin_)
     bpy.app.timers.register(check_timers_timer, persistent=True)
     if len(bpy.app.handlers.load_post) > 0:
@@ -63,7 +63,7 @@ def register():
 
 
 def unregister():
-    del bpy.types.Scene.rhinobridge_props
+    del bpy.types.Scene.rhinobridge
     for c in CLASSES:
         bpy.utils.unregister_class(c)
     bpy.app.timers.unregister(check_timers_timer)
